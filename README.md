@@ -22,7 +22,7 @@ a = ["xxxabcxxx", "adsaabc", "ytysabcrew", "qqqabcqw", "aaabc"]
 st = STree.STree(a)
 print(st.lcs()) # "abc"
 
-# Generalized Suffix-Tree example.
+# Generalized Suffix-Tree example with multiple lcs equal sized
 a = ["klexxxabc", "kleyyyabc"]
 st = STree.STree(a)
 print(st.lcsm()) # ["kle", "abc"]
