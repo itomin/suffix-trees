@@ -21,4 +21,9 @@ print(st.find_all("ab")) # [0, 8]
 a = ["xxxabcxxx", "adsaabc", "ytysabcrew", "qqqabcqw", "aaabc"]
 st = STree.STree(a)
 print(st.lcs()) # "abc"
+
+# Generalized Suffix-Tree example.
+a = ["klexxxabc", "kleyyyabc"]
+st = STree.STree(a)
+print(st.lcsm()) # ["kle", "abc"]
 ```
