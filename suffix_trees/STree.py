@@ -158,6 +158,44 @@ class STree():
         end = deepestNode.idx + deepestNode.depth
         return self.word[start:end]
 
+    def lcsm(self, stringIdxs=-1):
+        """Returns all Largest Common Substrings of Strings provided in stringIdxs
+           if there are lcs of equal size, a list with all lcs is returned.
+        If stringIdxs is not provided, the LCS of all strings is returned.
+
+        ::param stringIdxs: Optional: List of indexes of strings.
+        """
+        if stringIdxs == -1 or not isinstance(stringIdxs, list):
+            stringIdxs = set(range(len(self.word_starts)))
+        else:
+            stringIdxs = set(stringIdxs)
+
+        deepestNodes = self._find_lcsm(self.root, stringIdxs)
+        if len(deepestNodes) == 0:
+            return []
+
+        return  [ self.word[n.idx:(n.idx + n.depth)] for n in deepestNodes ]
+
+    def _find_lcsm(self, node, stringIdxs):
+        """Helper method that finds LCS by traversing the labeled GSD."""
+        deepestNodes = []
+        nodes = [self._find_lcs(n, stringIdxs)
+            for (n,_) in node.transition_links
+            if n.generalized_idxs.issuperset(stringIdxs)]
+
+        if nodes == []:
+            return deepestNodes
+
+        nodes.sort(key=lambda x: x.depth, reverse=True)
+        deepestNodes = []
+        maxDepth = nodes[0].depth
+
+        for n in nodes:
+            if n.depth == maxDepth:
+                deepestNodes = deepestNodes + [n]
+
+        return deepestNodes
+
     def _find_lcs(self, node, stringIdxs):
         """Helper method that finds LCS by traversing the labeled GSD."""
         nodes = [self._find_lcs(n, stringIdxs)
@@ -191,18 +229,18 @@ class STree():
             edge = self._edgeLabel(node, node.parent)
             if edge.startswith(y):
                 return node.idx
-            
+
             i = 0
             while(i < len(edge) and edge[i] == y[0]):
                 y = y[1:]
                 i += 1
-            
+
             if i != 0:
                 if i == len(edge) and y != '':
                     pass
                 else:
                     return -1
-            
+
             node = node._get_transition_link(y[0])
             if not node:
                 return -1
@@ -219,7 +257,7 @@ class STree():
             while(i < len(edge) and edge[i] == y[0]):
                 y = y[1:]
                 i += 1
-            
+
             if i != 0:
                 if i == len(edge) and y != '':
                     pass
